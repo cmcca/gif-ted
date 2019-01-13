@@ -3,11 +3,41 @@
 
 var trending = "https://api.giphy.com/v1/gifs/trending?&api_key=d7b7211e027547b09b92844a2907e598&limit=10&rating";
 
-$.ajax({
-	url: trending,
-	type: 'GET',
-})
-.done(function(response) {
+var topics = ["puppies", "kittens", "dino", "donut", "rainbow", "squid"]
+
+console.log(topics)
+
+
+function buttons() {
+
+	for (var i= 0; i < topics.length; i++) {
+
+		var topicLink = "https://api.giphy.com/v1/gifs/search?q=" + topics[i] +"&api_key=d7b7211e027547b09b92844a2907e598&limit=10&rating"
+
+		console.log(topicLink);
+
+		var button = $("<div class='btn btn-info btn-block'>");
+		button.attr({
+			"data-still": response.data[i].images.downsized_still.url,
+			"data-active": response.data[i].images.downsized.url,
+			"data-state": "still"
+			
+		});
+
+		button.html([i]);
+		$('#buttons').append(button);
+
+		$.ajax({
+			url: topicLink,
+			type: 'GET',
+		})
+		
+	}
+}
+
+
+
+/*function(response) {
 	
 	for (var i = 0; i < response.data.length - 5; i++) {
 		
@@ -18,11 +48,33 @@ $.ajax({
 			"data-state": "still"
 		});
 
-		button.html([i+1]);
+		button.html([i]);
 		$('#buttons').append(button);
 	}
 })
 
+
+$.ajax({
+	url: trending,
+	type: 'GET',
+})
+.then(function(response) {
+	
+	for (var i = 0; i < response.data.length - 5; i++) {
+		
+		var button = $("<div class='btn btn-info btn-block'>");
+		button.attr({
+			"data-still": response.data[i].images.downsized_still.url,
+			"data-active": response.data[i].images.downsized.url,
+			"data-state": "still"
+		});
+
+		button.html([i]);
+		$('#buttons').append(button);
+	}
+})
+
+*/
 
 $('#buttons').on("click", "div", function() {
 
@@ -73,8 +125,10 @@ $('#inputForm').keypress(function(e) {
     	$.ajax({
 		url: queryURL,
 		type: 'GET',
+		
 	})
-	.done(function(response) {
+	
+	.then(function(response) {
 
 		$('#gifs').empty();
 		var state = $(this).attr("data-state");
@@ -103,7 +157,7 @@ $('#inputForm').keypress(function(e) {
 
 
 	
-// empty gif image area
+// clears gifs
 $('#emptyGifs').click(function() {
   $('#gifs').empty();
 });
